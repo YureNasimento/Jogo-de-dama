@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dama - Jogo de damas brasileiro</title>
+<meta name="description" content="Jogo de dama brasileiro contra a máquina, com pontos, Dcoin e loja de Natal.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%91%91%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="scene" aria-hidden="true"><canvas id="snow"></canvas></div>
+<div class="rail" id="rail">
+  <button class="btn alt tb" id="bShop" aria-label="Loja de Natal"><span>🛍️</span><small>Loja</small></button>
+  <button class="btn alt tb" id="bBag" aria-label="Artefatos"><span>🎒</span><small>Artefatos</small></button>
+</div>
+<div class="tools">
+  <button class="btn alt tb" id="bWallet" aria-label="Carteira Dcoin"><span class="coin"></span></button>
+  <div class="dd"><button class="btn alt tb" id="bTheme" aria-label="Escolher tema" aria-expanded="false" aria-controls="pTheme">🎨</button><div class="pop hide" id="pTheme"></div></div>
+  <div class="dd"><button class="btn alt tb" id="bPiece" aria-label="Escolher cor das peças" aria-expanded="false" aria-controls="pPiece"><span class="ic"><i></i><i></i></span></button><div class="pop hide" id="pPiece"></div></div>
+</div>
+
+<section id="menu" class="screen">
+  <h1>Dama</h1>
+  <p class="sub">O jogo de damas brasileiro</p>
+  <div id="hero" class="hero" role="img" aria-label="Tabuleiro de dama com peças"></div>
+  <div class="lbl">Escolha a dificuldade</div>
+  <div class="seg" role="group" aria-label="Dificuldade">
+    <button data-d="facil"><span class="ic2">🌱</span><b>Fácil</b><i>★☆☆</i><em>×1</em></button><button data-d="medio" class="on"><span class="ic2">🔥</span><b>Médio</b><i>★★☆</i><em>×2</em></button><button data-d="dificil"><span class="ic2">⚡</span><b>Difícil</b><i>★★★</i><em>×4</em></button>
+  </div>
+  <button class="btn" id="go">Começar a jogar</button>
+  <details>
+    <summary>Como jogar</summary>
+    <ul>
+      <li>Você joga com as peças rosas e começa. Só se usa as casas escuras.</li>
+      <li>Peças andam uma casa na diagonal, para frente.</li>
+      <li>Para capturar, pule sobre a peça adversária, para frente ou para trás.</li>
+      <li>Capturar é obrigatório e vale a regra da maioria: você deve escolher a sequência que captura mais peças.</li>
+      <li>Peça que termina a jogada na última fileira vira dama.</li>
+      <li>A dama anda e captura a qualquer distância na diagonal.</li>
+      <li>Vence quem capturar todas as peças do adversário ou deixá-lo sem jogadas. Empate após 20 lances de cada lado só com damas e sem captura.</li>
+      <li>Pontos: quanto mais difícil o modo, mais você ganha (×1, ×2 ou ×4). Converta seus pontos em Dcoin na carteira.</li>
+    </ul>
+  </details>
+</section>
+
+<section id="wallet" class="screen hide">
+  <h2 class="wt">Carteira</h2>
+  <div class="bal">
+    <div class="card"><small>Pontos</small><b id="wPts">0</b></div>
+    <div class="card dc"><small>Dcoin</small><b><span class="coin"></span> <span id="wDc">0</span></b></div>
+  </div>
+  <p class="sub">100 pontos = 1 Dcoin</p>
+  <div class="conv">
+    <div>Quantos Dcoin você quer?</div>
+    <div class="step"><button id="wMinus" aria-label="Menos">−</button><output id="wAmt" aria-live="polite">0</output><button id="wPlus" aria-label="Mais">+</button></div>
+    <div id="wInfo"></div>
+    <button class="btn alt" id="wMax">Máximo</button>
+    <button class="btn" id="wGo">Converter</button>
+    <div id="wMsg" aria-live="polite"></div>
+  </div>
+  <details>
+    <summary>Como ganhar pontos</summary>
+    <ul>
+      <li>Capturar uma peça: 10 pontos.</li>
+      <li>Transformar uma peça em dama: 25 pontos.</li>
+      <li>Vitória: 200 pontos. Empate: 50 pontos.</li>
+      <li>Multiplicador: Fácil ×1, Médio ×2, Difícil ×4.</li>
+      <li>Os pontos entram na carteira quando a partida termina. Sair antes perde os pontos dela.</li>
+      <li>Dcoin é a moeda do jogo e não tem valor em dinheiro real.</li>
+    </ul>
+  </details>
+  <button class="btn alt" id="wBack">Voltar</button>
+</section>
+
+<section id="shop" class="screen top hide">
+  <h2 class="wt">Loja de Natal</h2>
+  <div class="chip"><span class="coin"></span> <span id="sDc">0</span> Dcoin</div>
+  <div class="tabs" role="tablist"><button data-t="b" class="on">🎅 Bonecos</button><button data-t="t">🎨 Temas</button><button data-t="s">♟️ Peças</button></div>
+  <p class="sub" id="tabInfo"></p>
+  <div id="sMsg" aria-live="polite"></div>
+  <div class="grid" id="shopGrid"></div>
+  <div class="row"><button class="btn alt" id="sBack">Voltar</button><button class="btn alt" id="sBag">Artefatos</button><button class="btn alt" id="sWallet">Carteira</button></div>
+</section>
+
+<section id="bag" class="screen top hide">
+  <h2 class="wt">Artefatos</h2>
+  <p class="sub" id="bagCount"></p>
+  <p class="sub hide" id="bagEmpty">Nada por aqui ainda. Compre bonequinhos na loja!</p>
+  <div class="grid" id="bagGrid"></div>
+  <div class="row"><button class="btn alt" id="gBack">Voltar</button><button class="btn alt" id="gShop">Loja</button></div>
+</section>
+
+<section id="game" class="screen hide">
+  <div class="hud">
+    <button class="btn alt" id="toMenu">Menu</button>
+    <div class="chip"><span class="dot" style="background:var(--pa)"></span>Você <span id="cp">12</span></div>
+    <div class="chip"><span class="dot" style="background:var(--pb)"></span>Máquina <span id="cm">12</span></div>
+    <div class="chip">⭐ <span id="pts">0</span> pts</div>
+    <button class="btn alt" id="reset">Reiniciar</button>
+  </div>
+  <div id="status"></div>
+  <div id="board"></div>
+</section>
+
+<div id="end" class="hide">
+  <h2 id="endTitle"></h2>
+  <p id="endPts"></p>
+  <p class="sub" id="endDet"></p>
+  <button class="btn" id="again">Jogar de novo</button>
+  <button class="btn alt" id="endWallet">Converter pontos em Dcoin</button>
+  <button class="btn alt" id="endMenu">Voltar ao menu</button>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
